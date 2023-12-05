@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require('express');
 const app = express();
 const userRouter = require("./api/users/user.router");
-const predictionRouter = require("./api/prediction.prediction.router");
+
 
 app.use(express.json());
 
