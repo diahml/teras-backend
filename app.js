@@ -2,11 +2,12 @@ require("dotenv").config();
 const express = require('express');
 const app = express();
 const userRouter = require("./api/users/user.router");
+const predictionRouter = requiere("./api/prediction.prediction.router");
 
 app.use(express.json());
 
 //registration
-app.use("/api/users", userRouter);
+app.use("/", userRouter);
 
 const port = process.env.APP_PORT || 3000;
 app.listen(port, () => {

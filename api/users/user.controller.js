@@ -1,6 +1,8 @@
-const { create, getUserbyID, getUsers, updateUser, deleteUser } = require("./user.service");
+const { create, getUserbyID, getUsers, updateUser, deleteUser, getUserbyUserEmail, readPrediction } = require("./user.service");
 
-const { genSaltSync, hashSync } = require("bcrypt");
+const { genSaltSync, hashSync, compareSync } = require("bcrypt");
+const jsonwebtoken = require("jsonwebtoken");
+const { sign } = require("jsonwebtoken");
 
 module.exports = {
     //registration
@@ -24,7 +26,89 @@ module.exports = {
         });
     },
 
-    getUserbyID: (req, res)=>{
+    getUsers:(req,res)=>{
+        getUsers((err, results)=>{
+            if(err){
+                console.log(err);
+                return;
+            }
+            return res.status(200).json({
+                success:1,
+                data:results
+            });
+        });
+    },
+
+    updateUser: (req,res) =>{
+        const body = req.body;
+        const salt = genSaltSync(10);
+        body.password = hashSync(body.password, salt);
+        
+        updateUser (body, (err, results)=>{
+            if(err){
+                console.log(err);
+                return;
+            }
+            else if (!results) {
+                return res.status(404).json({
+                  success: 0,
+                  message: "User not found"
+                });
+            }
+            return res.status(200).json({
+                success:1,
+                message :"updated successfully"
+            });
+        });
+    },
+
+    login:(req, res) =>{
+        const body = req.body;
+        getUserbyUserEmail(body.email, (err, results)=>{
+            if(err) {
+                console.log(err);
+            }
+            if(!results) {
+                return res.json({
+                    success : 0,
+                    data : "Invalid email or password"
+                });
+            }
+            const result = compareSync(body.password, results.password);
+            if(result){
+                results.password = undefined;
+                const jsontoken = sign({result : results},process.env.JSON_KEY, {
+                    expiresIn :"1h"
+                });
+                return res.json({
+                    sucess:1,
+                    message:"Login Successfully",
+                    token:jsontoken
+                });
+            }else{
+                return res.json({
+                    sucess:0,
+                    message:"Invalid email or password"
+                });
+            }
+        });
+    },
+
+    //read prediction result
+    readPrediction:(req,res)=>{
+        readPrediction((err, results)=>{
+            if(err){
+                console.log(err);
+                return;
+            }
+            return res.status(200).json({
+                success:1,
+                data:results
+            });
+        });
+    },
+
+      getUserbyID: (req, res)=>{
         const id = req.params.id;
         getUserbyID(id, (err, results)=>{
             if(err){
@@ -40,41 +124,6 @@ module.exports = {
             return res.status(200).json({
                 success : 1,
                 data:results
-            });
-        });
-    },
-
-    getUsers:(req,res)=>{
-        getUsers((err, results)=>{
-            if(err){
-                console.lof(err);
-                return;
-            }
-            return res.status(200).json({
-                success:1,
-                data:results
-            });
-        });
-    },
-
-    updateUser: (req,res) =>{
-        const body = req.body;
-        const salt = genSaltSync(10);
-        body.password = hashSync(body.password, salt);
-        updateUser (body, (err, results)=>{
-            if(err){
-                console.log(err);
-                return;
-            }
-            if(!results){
-                return res.status(404).json({
-                    success:0,
-                    message:"failed to update user"
-                });
-            }
-            return res.status(200).json({
-                success:1,
-                message :"update successfully"
             });
         });
     },
@@ -97,5 +146,5 @@ module.exports = {
                 message:"User deleted successfully"
             });
         });
-    }
-}
+    },
+};

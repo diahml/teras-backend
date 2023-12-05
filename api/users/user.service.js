@@ -4,10 +4,11 @@ module.exports= {
     //registration
     create :(data, callBack) => {
         pool.query(
-            `insert into user (name, email, password) values(?,?,?)`,
+            `insert into user (name, email, address, password) values(?,?,?,?)`,
             [
                 data.name,
                 data.email,
+                data.address,
                 data.password
             ],
             (error, results, fields) =>{
@@ -22,7 +23,7 @@ module.exports= {
     //getAllUser, tp kita gabutuh sii, tes buat operasi crud yg lain
     getUsers: callBack=>{
         pool.query(
-            `select id, name, email from user`,
+            `select id, name, email, address from user`,
              [],
              (error, results, fields)=>{
                 if (error){
@@ -36,7 +37,7 @@ module.exports= {
     //getUserbyId
     getUserbyID: (id, callBack)=>{
         pool.query(
-            `select id, name, email from user where id = ?`,
+            `select id, name, email, address from user where id = ?`,
              [id],
              (error, results, fields)=>{
                 if (error){
@@ -49,10 +50,11 @@ module.exports= {
 
     updateUser :(data, callBack) => {
         pool.query(
-            `update user set name=?, email=?, password=? where id=?`,
+            `update user set name=?, email=?, address=?, password=? where id=?`,
             [
                 data.name,
                 data.email,
+                data.address,
                 data.password,
                 data.id
             ],
@@ -60,7 +62,11 @@ module.exports= {
                 if (error){
                    return callBack(error);
                 }
-                return callBack (null, results[0]);
+                if (results.affectedRows === 0) {
+                    // no affected rows mean data not found
+                    return callBack(null, null);
+                }
+                return callBack (null, results);
             }
         );
     },
@@ -75,6 +81,34 @@ module.exports= {
                 }
                 return callBack (null, results[0]);
             }
+        );
+    },
+
+    getUserbyUserEmail: (email,callBack) =>{
+        pool.query(
+            `select * from user where email = ?`,
+            [email],
+            (error, results, fields) =>{
+                if (error){
+                    callBack(error);
+                }
+                return callBack (null, results[0]);
+            }
+        );
+    },
+
+    readPrediction: callBack=>{
+        pool.query(
+            `select province, status FROM prediction_result`,
+             [],
+             (error, results, fields)=>{
+                if (error){
+                    console.error("Error executing query:", error);
+                    return callBack(error);
+                }
+                console.log("Results:", results);
+                return callBack(null, results);
+             }
         );
     },
 };
