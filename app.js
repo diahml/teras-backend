@@ -1,13 +1,17 @@
 require("dotenv").config();
 const express = require('express');
 const app = express();
+const predictionRouter = require("./api/prediction/prediction.router");
 const userRouter = require("./api/users/user.router");
-
+const forumRouter = require("./api/forums/forum.router");
 
 app.use(express.json());
 
-//registration
+app.use("/prediction", predictionRouter);
+app.use("/forum", forumRouter);
 app.use("/", userRouter);
+
+
 
 const port = process.env.APP_PORT || 3000;
 app.listen(port, () => {

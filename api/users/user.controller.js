@@ -1,4 +1,4 @@
-const { create, getUserbyID, getUsers, updateUser, deleteUser, getUserbyUserEmail, readPrediction } = require("./user.service");
+const { create, getUsers, getUserbyID, updateUser, deleteUser, getUserbyUserEmail } = require("./user.service");
 
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
@@ -95,18 +95,18 @@ module.exports = {
     },
 
     //read prediction result
-    readPrediction:(req,res)=>{
-        readPrediction((err, results)=>{
-            if(err){
-                console.log(err);
-                return;
-            }
-            return res.status(200).json({
-                success:1,
-                data:results
-            });
-        });
-    },
+    // readPrediction:(req,res)=>{
+    //     readPrediction((err, results)=>{
+    //         if(err){
+    //             console.log(err);
+    //             return;
+    //         }
+    //         return res.status(200).json({
+    //             success:1,
+    //             data:results
+    //         });
+    //     });
+    // },
 
       getUserbyID: (req, res)=>{
         const id = req.params.id;
@@ -118,7 +118,7 @@ module.exports = {
             if(!results){
                 return res.status(404).json({
                     success:0,
-                    message: "Record not found"
+                    message: "Record not Found"
                 });
             }
             return res.status(200).json({

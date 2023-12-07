@@ -1,10 +1,10 @@
-const { createUser, getUserbyID, getUsers, updateUser, login, readPrediction, deleteUser } = require("./user.controller");
+const { createUser, getUsers, getUserbyID, updateUser, login, deleteUser } = require("./user.controller");
 const router = require("express").Router();
 const { checkToken } = require("../../auth/token_validation"); //used in the route that require login
 
 
 //read prediction
-router.get("/prediction", readPrediction);
+// router.get("/prediction", readPrediction);
 
 //registration (cuma yg createUser)
 router.post("/register", createUser);
