@@ -21,7 +21,7 @@ module.exports={
 
     getForum: callBack=>{
         pool.query(
-            `select id, user_id, title, content, image, created_at from forums`,
+            `select id, title, content, image, created_at from forums`,
              [],
              (error, results, fields)=>{
                 if (error){
@@ -32,18 +32,38 @@ module.exports={
         )
     },
 
+
+
     getForumbyID: (id, callBack)=>{
-        pool.query(
-            `select id, user_id, title, content, image, created_at from forums where id = ?`,
-             [id],
-             (error, results, fields)=>{
-                if (error){
+        pool.query('SELECT id AS forum_id, title, content AS forum_content, image AS forum_image, created_at AS forum_created_at FROM forums WHERE id = ?', 
+        [id], 
+        (error, results, fields) => {
+            if (error) {
+                return callBack(error);
+            }
+            forumResult = results;
+        
+            // Query untuk tabel replies
+            pool.query('SELECT id AS reply_id, user_id AS reply_user_id, content AS reply_content, image AS reply_image, created_at AS reply_created_at FROM replies WHERE forum_id = ?', 
+            [id], 
+            (error, results,fields) => {
+                if (error) {
                     return callBack(error);
                 }
-                return callBack(null, results[0]);
-             }
-        );
+                repliesResult = results;
+        
+                // Menggabungkan hasil query pertama dan kedua
+                const result = {
+                    forum: forumResult,
+                    replies: repliesResult
+                };
+
+                // Mengembalikan hasil gabungan
+                return callBack(null, forumResult, repliesResult);
+            });
+        });
     },
+
 
     reply :(forum_id, data, callBack)=>{
         pool.query(

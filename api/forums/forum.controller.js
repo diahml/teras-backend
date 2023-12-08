@@ -1,4 +1,4 @@
-const { createForum, getForum, getForumbyID, reply } = require("./forum.service");
+const { createForum, getForum, reply, getForumbyID} = require("./forum.service");
 
 module.exports={
     createForum:(req,res)=>{
@@ -31,14 +31,15 @@ module.exports={
         });
     },
 
+ 
     getForumbyID: (req, res)=>{
         const id = req.params.id;
-        getForumbyID(id, (err, results)=>{
+        getForumbyID(id, (err, forumResult, repliesResult)=>{
             if(err){
                 console.log(err);
                 return;
             }
-            if(!results){
+            if(!forumResult && repliesResult){
                 return res.status(404).json({
                     success:0,
                     message: "Record not Found"
@@ -46,7 +47,8 @@ module.exports={
             }
             return res.status(200).json({
                 success : 1,
-                data:results
+                forum:forumResult, 
+                replies:repliesResult
             });
         });
     },

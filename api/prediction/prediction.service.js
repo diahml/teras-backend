@@ -4,7 +4,7 @@ module.exports={
     //read prediction
     readPrediction: callBack=>{
         pool.query(
-            `select province, status FROM prediction_result`,
+            `select province, prediction_amount FROM prediction_result`,
              [],
              (error, results, fields)=>{
                 if (error){

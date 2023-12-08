@@ -77,13 +77,13 @@ module.exports = {
             const result = compareSync(body.password, results.password);
             if(result){
                 results.password = undefined;
-                const jsontoken = sign({result : results},process.env.JSON_KEY, {
+                const jsonwebtoken = sign({result : results},process.env.JSON_KEY, {
                     expiresIn :"1h"
                 });
                 return res.json({
                     sucess:1,
                     message:"Login Successfully",
-                    token:jsontoken
+                    token:jsonwebtoken
                 });
             }else{
                 return res.json({
