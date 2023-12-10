@@ -69,9 +69,10 @@ module.exports = {
                 console.log(err);
             }
             if(!results) {
-                return res.json({
+                return res.status(401).json({
                     success : 0,
-                    data : "Invalid email or password"
+                    data : "Invalid email or password",
+                    message:"Unauthorized"
                 });
             }
             const result = compareSync(body.password, results.password);
@@ -80,7 +81,7 @@ module.exports = {
                 const jsonwebtoken = sign({result : results},process.env.JSON_KEY, {
                     expiresIn :"1h"
                 });
-                return res.json({
+                return res.status(200).json({
                     sucess:1,
                     message:"Login Successfully",
                     token:jsonwebtoken
@@ -94,19 +95,6 @@ module.exports = {
         });
     },
 
-    //read prediction result
-    // readPrediction:(req,res)=>{
-    //     readPrediction((err, results)=>{
-    //         if(err){
-    //             console.log(err);
-    //             return;
-    //         }
-    //         return res.status(200).json({
-    //             success:1,
-    //             data:results
-    //         });
-    //     });
-    // },
 
       getUserbyID: (req, res)=>{
         const id = req.params.id;
@@ -123,7 +111,8 @@ module.exports = {
             }
             return res.status(200).json({
                 success : 1,
-                data:results
+                data:results,
+                message:"OK"
             });
         });
     },

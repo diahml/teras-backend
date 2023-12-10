@@ -14,6 +14,7 @@ module.exports={
             return res.status(200).json({
                 success:1,
                 data:results,
+                message:"OK",
             });
         });
     },
@@ -26,7 +27,8 @@ module.exports={
             }
             return res.status(200).json({
                 success:1,
-                data:results
+                data:results,
+                message:"OK",
             });
         });
     },
@@ -39,7 +41,7 @@ module.exports={
                 console.log(err);
                 return;
             }
-            if(!forumResult && repliesResult){
+            if(!forumResult){
                 return res.status(404).json({
                     success:0,
                     message: "Record not Found"
@@ -48,7 +50,8 @@ module.exports={
             return res.status(200).json({
                 success : 1,
                 forum:forumResult, 
-                replies:repliesResult
+                replies:repliesResult,
+                message:"OK"
             });
         });
     },
@@ -67,6 +70,7 @@ module.exports={
             return res.status(200).json({
                 success:1,
                 data:results,
+                message:"OK"
             });
         });
     },

@@ -59,7 +59,7 @@ module.exports={
                 };
 
                 // Mengembalikan hasil gabungan
-                return callBack(null, forumResult, repliesResult);
+                return callBack(null, forumResult[0], repliesResult);
             });
         });
     },
