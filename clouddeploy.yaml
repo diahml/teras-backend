@@ -1,0 +1,38 @@
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: DeliveryPipeline
+metadata:
+  name: teras-backend-pipeline
+description: teras-backend application delivery pipeline
+serialPipeline:
+ stages:
+ - targetId: dev
+   profiles: []
+ - targetId: staging
+   profiles: []
+ - targetId: prod
+   profiles: []
+---
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: dev
+description: dev cluster
+gke:
+  cluster: projects/coba-coba-project-407404/locations/Zone added at lab start/clusters/dev-cluster
+---
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: staging
+description: staging cluster
+gke:
+  cluster: projects/coba-coba-project-407404/locations/Zone added at lab start/clusters/staging-cluster
+---
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: prod
+description: prod cluster
+requireApproval: true
+gke:
+  cluster: projects/coba-coba-project-407404/locations/Zone added at lab start/clusters/prod-cluster

@@ -1,8 +1,19 @@
 const { createForum, getForum, reply, getForumbyID} = require("./forum.service");
+const Multer = require('multer');
+const imgUpload = require("../../modules/imgUpload.js");
+
+const multer = Multer({
+    storage: Multer.MemoryStorage,
+    fileSize: 5 * 1024 * 1024
+})
 
 module.exports={
-    createForum:(req,res)=>{
+    createForum:[multer.single('attachment'), imgUpload.uploadToGcs, (req,res)=>{
         const body= req.body;
+
+        if (req.file && req.file.cloudStoragePublicUrl) {
+            body.image = req.file.cloudStoragePublicUrl
+        }
         createForum(body, (err, results)=> {
             if(err){
                 console.log(err);
@@ -17,7 +28,7 @@ module.exports={
                 message:"OK",
             });
         });
-    },
+    }],
 
     getForum:(req,res)=>{
         getForum((err, results)=>{

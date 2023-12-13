@@ -13,7 +13,7 @@ app.use("/", userRouter);
 
 
 
-const port = process.env.APP_PORT || 3000;
+const port = process.env.APP_PORT || 8080;
 app.listen(port, () => {
     console.log(`server is up and running on : ${port}`);
 });
