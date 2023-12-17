@@ -2,16 +2,14 @@ const { readPrediction } = require("./prediction.service");
 
 module.exports = {
     readPrediction: (req,res)=>{
-        readPrediction((err, results)=>{
-            if(err){
-                console.log(err);
-                return;
-            }
-            return res.status(200).json({
-                success:1,
-                data:results,
-                message:"OK"
+        const flaskUrl = 'https://teras-model-hqlboaqepq-et.a.run.app/prediction';
+
+        axios.get(flaskUrl)
+            .then(response =>{
+                res.send(response.data);
+            })
+            .catch(error =>{
+                res.status(500).send('Error calling Flask: ' + error);
             });
-        });
     },
 };
