@@ -1,7 +1,7 @@
 const { create, getUsers, getUserbyID, updateUser, deleteUser, getUserbyUserEmail } = require("./user.service");
 
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
-const jsonwebtoken = require("jsonwebtoken");
+// const jsonwebtoken = require("jsonwebtoken");
 const { sign } = require("jsonwebtoken");
 
 module.exports = {
@@ -78,7 +78,7 @@ module.exports = {
             const result = compareSync(body.password, results.password);
             if(result){
                 results.password = undefined;
-                const jsonwebtoken = sign({result : results},process.env.JSON_KEY, {
+                const jsonwebtoken = sign({result : results},'qwe123', {
                     expiresIn :"1h"
                 });
                 return res.status(200).json({

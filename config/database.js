@@ -1,11 +1,11 @@
 const { createPool } = require("mysql");
 
 const pool = createPool({
-    port : process.env.DB_PORT,
-    host : process.env.DB_HOST,
-    user : process.env.DB_USER,
-    password : process.env.DB_PASS,
-    database :process.env.MYSQL_DB,
+    host : '34.101.62.172',
+    port: '3306',
+    user : 'root',
+    password : '',
+    database :'teras-db',
     connectionLimit:10,
 });
 
